@@ -4,6 +4,7 @@ using Repository;
 
 namespace AssayFinder.ContextFactory
 {
+    // IDesignTimeDbContextFactory needed for migrations as RepositoryContext is in another class
     public class RepositoryContextFactory : IDesignTimeDbContextFactory<RepositoryContext>
     {
         public RepositoryContext CreateDbContext(string[] args)
