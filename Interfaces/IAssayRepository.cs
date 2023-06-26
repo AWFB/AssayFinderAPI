@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace Interfaces
 {
     public interface IAssayRepository
     {
+        IEnumerable<Assay> GetAssays(Guid laboratoryId, bool trackChanges);
+        Assay GetAssay(Guid laboratoryId, Guid id, bool trackChanges);
     }
 }

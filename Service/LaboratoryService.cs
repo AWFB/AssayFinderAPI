@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Entities.Exceptions;
 using Interfaces;
 using Service.Interfaces;
 using Shared.DTOs;
@@ -31,6 +32,12 @@ namespace Service
         public LaboratoryDTO GetLaboratory(Guid id, bool trackChanges)
         {
             var lab = _repository.Laboratory.GetLaboratory(id, trackChanges);
+
+            if (lab is null)
+            {
+                throw new LaboratoryNotFoundException(id);
+            }
+
             var laboratoryDto = _mapper.Map<LaboratoryDTO>(lab);
             
             return laboratoryDto;

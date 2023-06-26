@@ -9,7 +9,6 @@ LogManager.Setup().LoadConfigurationFromFile("/nlog.config");
 
 // Add services to the container.
 builder.Services.ConfigCors();
-
 builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
@@ -33,7 +32,6 @@ if (app.Environment.IsProduction())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.All

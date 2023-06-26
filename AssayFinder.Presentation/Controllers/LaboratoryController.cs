@@ -24,11 +24,13 @@ namespace AssayFinder.Presentation.Controllers
         }
 
         //api/laboratories/{id}
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:Guid}")]
         public IActionResult GetLaboratory(Guid id)
         {
             var company = _service.LaboratoryService.GetLaboratory(id, trackChanges: false);
             return Ok(company);
         }
+
+        
     }
 }
