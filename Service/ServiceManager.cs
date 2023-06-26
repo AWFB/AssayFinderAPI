@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using AutoMapper;
+using Interfaces;
 using Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,10 @@ namespace Service
         private readonly Lazy<ILaboratoryService> _laboratoryService;
         private readonly Lazy<IAssayService> _assayService;
 
-        public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger)
+        public ServiceManager(IRepositoryManager repositoryManager, ILoggerManager logger, IMapper mapper)
         {
-            _laboratoryService = new Lazy<ILaboratoryService>(() => new LaboratoryService(repositoryManager, logger));
-            _assayService = new Lazy<IAssayService>(() => new AssayService(repositoryManager, logger));
+            _laboratoryService = new Lazy<ILaboratoryService>(() => new LaboratoryService(repositoryManager, logger, mapper));
+            _assayService = new Lazy<IAssayService>(() => new AssayService(repositoryManager, logger, mapper));
         }
 
         public ILaboratoryService LaboratoryService => _laboratoryService.Value;

@@ -13,5 +13,14 @@ namespace Repository
         public LaboratoryRepository(RepositoryContext repositoryContext) : base(repositoryContext) 
         { 
         }
+
+        // Get all Labs
+        public IEnumerable<Laboratory> GetAllLaboratories(bool trackchanges)
+        {
+            List<Laboratory> Labs = FindAll(trackchanges).OrderBy(l => l.LaboratoryName).ToList();
+            return Labs;
+        }
+
+
     }
 }
