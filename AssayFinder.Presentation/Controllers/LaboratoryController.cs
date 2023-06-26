@@ -22,5 +22,13 @@ namespace AssayFinder.Presentation.Controllers
 
             return Ok(labs);
         }
+
+        //api/laboratories/{id}
+        [HttpGet("{id:guid}")]
+        public IActionResult GetLaboratory(Guid id)
+        {
+            var company = _service.LaboratoryService.GetLaboratory(id, trackChanges: false);
+            return Ok(company);
+        }
     }
 }

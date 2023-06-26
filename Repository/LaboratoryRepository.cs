@@ -21,6 +21,11 @@ namespace Repository
             return Labs;
         }
 
+        public Laboratory GetLaboratory(Guid laboratoryId, bool trackchanges)
+        {
+            var lab = FindByCondition(l => l.Id.Equals(laboratoryId), trackchanges).SingleOrDefault();
 
+            return lab;
+        }
     }
 }
