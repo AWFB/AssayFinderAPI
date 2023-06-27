@@ -14,6 +14,7 @@ namespace Repository
         {
         }
 
+
         public Assay GetAssay(Guid laboratoryId, Guid id, bool trackChanges)
         {
             var assay = FindByCondition(a => a.LaboratoryId.Equals(laboratoryId) && a.AssayId == id, trackChanges)
@@ -29,6 +30,12 @@ namespace Repository
                 .ToList();
 
             return assays;
+        }
+
+        public void CreateAssayForLaboratory(Guid laboratoryId, Assay assay)
+        {
+            assay.LaboratoryId = laboratoryId;
+            Create(assay);
         }
     }
 }

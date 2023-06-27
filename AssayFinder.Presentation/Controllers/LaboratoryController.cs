@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using Shared.DTOs;
 
 namespace AssayFinder.Presentation.Controllers
 {
@@ -24,11 +25,25 @@ namespace AssayFinder.Presentation.Controllers
         }
 
         //api/laboratories/{id}
-        [HttpGet("{id:Guid}")]
+        [HttpGet("{id:Guid}", Name = "LaboratoryById")]
         public IActionResult GetLaboratory(Guid id)
         {
             var company = _service.LaboratoryService.GetLaboratory(id, trackChanges: false);
             return Ok(company);
+        }
+
+        //api/laboratories
+        [HttpPost]
+        public IActionResult CreateLaboratory([FromBody] LaboratoryForCreationDTO laboratory)
+        {
+            if (laboratory is null)
+            {
+                return BadRequest("LaboratoryForCreationDTO object is null");
+            }
+
+            var createdLab = _service.LaboratoryService.CreateLaboratory(laboratory);
+
+            return CreatedAtRoute("LaboratoryById", new { id = createdLab.Id }, createdLab);
         }
 
         

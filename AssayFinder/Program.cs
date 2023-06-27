@@ -1,6 +1,7 @@
 using AssayFinder.Extensions;
 using Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,12 @@ builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
+
+// To enable us to use custom responses
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 // As controllers are in the presentation layer
 builder.Services.AddControllers()

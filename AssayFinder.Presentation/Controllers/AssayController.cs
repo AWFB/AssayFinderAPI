@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
+using Shared.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,12 +30,26 @@ namespace AssayFinder.Presentation.Controllers
         }
 
         // api/laboratories/{laboratoryId}/assays/{assayId}
-        [HttpGet("{id:Guid}")]
+        [HttpGet("{id:Guid}", Name = "GetAssayForLaboratory")]
         public IActionResult GetAssayForLaboratory(Guid laboratoryId, Guid id)
         {
             var assay = _service.AssayService.GetAssay(laboratoryId, id, trackChanges: false);
 
             return Ok(assay);
+        }
+
+        // api/laboratories/{laboratoryId}/assays
+        [HttpPost]
+        public IActionResult CreateAssayForLaboratory(Guid laboratoryId, [FromBody] AssayForCreationDTO assay)
+        {
+            if (assay is null)
+            {
+                return BadRequest("AssayForCreationDTO object is null");
+            }
+
+            var assayToReturn = _service.AssayService.CreateAssayForLaboratory(laboratoryId, assay, trackChanges: false);
+
+            return CreatedAtRoute("GetAssayForLaboratory", new { laboratoryId, id = assayToReturn.AssayId }, assayToReturn);
         }
 
     }

@@ -33,10 +33,11 @@ namespace Entities.Models
         public string? EqaSchemeForTest { get; set; }
         public bool? IsPerformanceAcceptable { get; set; }
         public string? PerformanceOutcomesIfNotSatisafactory { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime LastUpdatedAt { get; set;} = DateTime.UtcNow;
         public string? Comments { get; set; }
         public string? MeditechCode { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime LastUpdatedAt { get; set;} = DateTime.UtcNow;
+        
 
         // navigation properties
         [ForeignKey(nameof(Laboratory))]

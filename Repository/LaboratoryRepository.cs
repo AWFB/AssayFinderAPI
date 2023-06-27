@@ -14,6 +14,7 @@ namespace Repository
         { 
         }
 
+
         // Get all Labs
         public IEnumerable<Laboratory> GetAllLaboratories(bool trackchanges)
         {
@@ -21,11 +22,18 @@ namespace Repository
             return Labs;
         }
 
+        // Get a specific laboratory
         public Laboratory GetLaboratory(Guid laboratoryId, bool trackchanges)
         {
             var lab = FindByCondition(l => l.Id.Equals(laboratoryId), trackchanges).SingleOrDefault();
 
             return lab;
+        }
+
+        // Create a laboratory
+        public void CreateLaboratory(Laboratory laboratory)
+        {
+            Create(laboratory);
         }
     }
 }

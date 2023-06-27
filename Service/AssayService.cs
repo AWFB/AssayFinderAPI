@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Exceptions;
+using Entities.Models;
 using Interfaces;
 using Service.Interfaces;
 using Shared.DTOs;
@@ -23,6 +24,8 @@ namespace Service
             _logger = logger;
             _mapper = mapper;
         }
+
+        
 
         public AssayDTO GetAssay(Guid laboratoryId, Guid id, bool trackChanges)
         {
@@ -57,6 +60,24 @@ namespace Service
 
             return assayDTO;
 
+        }
+
+        public AssayDTO CreateAssayForLaboratory(Guid laboratoryId, AssayForCreationDTO assayForCreation, bool trackChanges)
+        {
+            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            if (lab is null)
+            {
+                throw new LaboratoryNotFoundException(laboratoryId);
+            }
+
+            var assay = _mapper.Map<Assay>(assayForCreation);
+
+            _repository.Assay.CreateAssayForLaboratory(laboratoryId, assay);
+            _repository.Save();
+
+            var assayToReturn = _mapper.Map<AssayDTO>(assay);
+
+            return assayToReturn;
         }
     }
 }

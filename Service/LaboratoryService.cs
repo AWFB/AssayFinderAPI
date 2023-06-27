@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.Exceptions;
+using Entities.Models;
 using Interfaces;
 using Service.Interfaces;
 using Shared.DTOs;
@@ -41,6 +42,19 @@ namespace Service
             var laboratoryDto = _mapper.Map<LaboratoryDTO>(lab);
             
             return laboratoryDto;
+        }
+
+        // Create a laboratory
+        public LaboratoryDTO CreateLaboratory(LaboratoryForCreationDTO laboratory)
+        {
+            var lab = _mapper.Map<Laboratory>(laboratory);
+
+            _repository.Laboratory.CreateLaboratory(lab);
+            _repository.Save();
+
+            var labToReturn = _mapper.Map<LaboratoryDTO>(lab);
+
+            return labToReturn;
         }
     }
 }
