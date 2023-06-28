@@ -79,5 +79,23 @@ namespace Service
 
             return assayToReturn;
         }
+
+        public void DeleteAssayForLaboratory(Guid laboratoryId, Guid id, bool trackChanges)
+        {
+            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            if (lab is null)
+            {
+                throw new LaboratoryNotFoundException(laboratoryId);
+            }
+
+            var assayForLab = _repository.Assay.GetAssay(laboratoryId, id, trackChanges);
+            if (assayForLab is null)
+            {
+                throw new AssayNotFoundException(id);
+            }
+
+            _repository.Assay.DeleteAssay(assayForLab);
+            _repository.Save();
+        }
     }
 }

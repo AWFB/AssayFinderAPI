@@ -37,5 +37,10 @@ namespace Repository
             assay.LaboratoryId = laboratoryId;
             Create(assay);
         }
+
+        public void DeleteAssay(Assay assay)
+        {
+            Delete(assay);
+        }
     }
 }

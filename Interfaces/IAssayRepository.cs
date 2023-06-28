@@ -12,5 +12,6 @@ namespace Interfaces
         IEnumerable<Assay> GetAssays(Guid laboratoryId, bool trackChanges);
         Assay GetAssay(Guid laboratoryId, Guid id, bool trackChanges);
         void CreateAssayForLaboratory(Guid laboratoryId, Assay assay);
+        void DeleteAssay(Assay assay);
     }
 }
