@@ -35,5 +35,10 @@ namespace Repository
         {
             Create(laboratory);
         }
+
+        public void DeleteLaboratory(Laboratory laboratory)
+        {
+            Delete(laboratory);
+        }
     }
 }

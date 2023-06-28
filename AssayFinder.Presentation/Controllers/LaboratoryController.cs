@@ -46,6 +46,14 @@ namespace AssayFinder.Presentation.Controllers
             return CreatedAtRoute("LaboratoryById", new { id = createdLab.Id }, createdLab);
         }
 
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteLaboratory(Guid id)
+        {
+            _service.LaboratoryService.DeleteLaboratory(id, trackChanges: false);
+
+            return NoContent();
+        }
+
         
     }
 }

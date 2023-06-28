@@ -56,5 +56,18 @@ namespace Service
 
             return labToReturn;
         }
+
+        public void DeleteLaboratory(Guid laboratoryId, bool trackChanges)
+        {
+            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+
+            if (lab is null)
+            {
+                throw new LaboratoryNotFoundException(laboratoryId);
+            }
+
+            _repository.Laboratory.DeleteLaboratory(lab);
+            _repository.Save();
+        }
     }
 }

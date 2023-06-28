@@ -7,5 +7,6 @@ namespace Service.Interfaces
         IEnumerable<LaboratoryDTO> GetAllLaboratories(bool trackChanges);
         LaboratoryDTO GetLaboratory(Guid laboratoryId, bool trackChanges);
         LaboratoryDTO CreateLaboratory(LaboratoryForCreationDTO laboratory);
+        void DeleteLaboratory(Guid laboratoryId, bool trackChanges);
     }
 }
