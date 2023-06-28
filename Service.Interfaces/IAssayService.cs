@@ -13,5 +13,7 @@ namespace Service.Interfaces
         AssayDTO GetAssay(Guid laboratoryId, Guid id, bool trackChanges);
         AssayDTO CreateAssayForLaboratory(Guid laboratoryId, AssayForCreationDTO assayForCreation, bool trackChanges);
         void DeleteAssayForLaboratory(Guid laboratoryId, Guid id, bool trackChanges);
+        void UpdateAssayForLaboratory(Guid laboratoryId, Guid id, AssayForUpdateDTO assayForUpdate, 
+            bool labTrackChanges, bool assayTrackChanges);
     }
 }

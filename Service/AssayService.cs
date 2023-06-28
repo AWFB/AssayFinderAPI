@@ -97,5 +97,24 @@ namespace Service
             _repository.Assay.DeleteAssay(assayForLab);
             _repository.Save();
         }
+
+        public void UpdateAssayForLaboratory(Guid laboratoryId, Guid id, AssayForUpdateDTO assayForUpdate, 
+            bool labTrackChanges, bool assayTrackChanges)
+        {
+            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, labTrackChanges);
+            if (lab is null)
+            {
+                throw new LaboratoryNotFoundException(laboratoryId);
+            }
+
+            var assay = _repository.Assay.GetAssay(laboratoryId, id, assayTrackChanges);
+            if (assay is null)
+            {
+                throw new AssayNotFoundException(id);
+            }
+
+            _mapper.Map(assayForUpdate, assay);
+            _repository.Save();
+        }
     }
 }

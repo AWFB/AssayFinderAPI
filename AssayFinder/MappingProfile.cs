@@ -17,6 +17,8 @@ namespace AssayFinder
             CreateMap<LaboratoryForCreationDTO, Laboratory>();
 
             CreateMap<AssayForCreationDTO, Assay>();
+
+            CreateMap<AssayForUpdateDTO, Assay>();
         }
     }
 }
