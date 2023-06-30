@@ -94,6 +94,8 @@ namespace AssayFinder.Presentation.Controllers
 
             patchDoc.ApplyTo(result.assayToPatch, ModelState);
 
+            TryValidateModel(result.assayToPatch);
+
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
