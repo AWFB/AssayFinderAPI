@@ -43,6 +43,11 @@ namespace AssayFinder.Presentation.Controllers
                 return BadRequest("AssayForCreationDTO object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
             var assayToReturn = _service.AssayService.CreateAssayForLaboratory(laboratoryId, assay, trackChanges: false);
 
             return CreatedAtRoute("GetAssayForLaboratory", new { laboratoryId, id = assayToReturn.AssayId }, assayToReturn);
@@ -66,6 +71,11 @@ namespace AssayFinder.Presentation.Controllers
                 return BadRequest("AssayForUpdateDTO object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
             _service.AssayService.UpdateAssayForLaboratory(laboratoryid, id, assay,
                 labTrackChanges: false, assayTrackChanges: true);
 
@@ -82,7 +92,10 @@ namespace AssayFinder.Presentation.Controllers
 
             var result = _service.AssayService.GetAssayForPatch(laboratoryId, Id, labTrackChanges: false, assayTrackChanges: true);
 
-            patchDoc.ApplyTo(result.assayToPatch);
+            patchDoc.ApplyTo(result.assayToPatch, ModelState);
+
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
 
             _service.AssayService.SaveChangesForPatch(result.assayToPatch, result.assayEntity);
 

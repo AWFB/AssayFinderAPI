@@ -42,9 +42,32 @@ namespace AssayFinder.Presentation.Controllers
                 return BadRequest("LaboratoryForCreationDTO object is null");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
             var createdLab = _service.LaboratoryService.CreateLaboratory(laboratory);
 
             return CreatedAtRoute("LaboratoryById", new { id = createdLab.Id }, createdLab);
+        }
+
+        [HttpPut("{id:guid}")]
+        public IActionResult UpdateLaboratory(Guid id, [FromBody] LaboratoryForUpdateDTO laboratory)
+        {
+            if (laboratory is null)
+            {
+                return BadRequest("LaboratoryForUpdateDTO object is null");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(ModelState);
+            }
+
+            _service.LaboratoryService.UpdateLaboratory(id, laboratory, trackChanges: true);
+
+            return NoContent();
         }
 
         [HttpDelete("{id:guid}")]

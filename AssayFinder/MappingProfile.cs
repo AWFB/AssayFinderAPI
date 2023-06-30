@@ -12,9 +12,13 @@ namespace AssayFinder
                 .ForMember("FullAddress",
                 opts => opts.MapFrom(x => string.Join(", ", x.Address, x.City, x.Country, x.Postcode)));
 
+            CreateMap<LaboratoryForCreationDTO, Laboratory>();
+
+            CreateMap<LaboratoryForUpdateDTO, Laboratory>();
+
             CreateMap<Assay, AssayDTO>();
 
-            CreateMap<LaboratoryForCreationDTO, Laboratory>();
+            
 
             CreateMap<AssayForCreationDTO, Assay>();
 

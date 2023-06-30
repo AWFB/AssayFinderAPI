@@ -23,6 +23,7 @@ namespace Entities.Models
         public string? ContactNumber { get; set; }
 
         [Required(ErrorMessage = "Contact Email is required")]
+        [EmailAddress]
         public string? ContactEmail { get; set; }
 
         [Required(ErrorMessage = "First Line of address is required")]

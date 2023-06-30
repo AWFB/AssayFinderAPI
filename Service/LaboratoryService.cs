@@ -69,5 +69,17 @@ namespace Service
             _repository.Laboratory.DeleteLaboratory(lab);
             _repository.Save();
         }
+
+        public void UpdateLaboratory(Guid laboratoryId, LaboratoryForUpdateDTO laboratoryForUpdate, bool trackChanges)
+        {
+            var labEntity = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            if (labEntity is null)
+            {
+                throw new LaboratoryNotFoundException(laboratoryId);
+            }
+
+            _mapper.Map(laboratoryForUpdate, labEntity);
+            _repository.Save();
+        }
     }
 }
