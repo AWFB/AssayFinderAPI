@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Service
 {
@@ -114,6 +115,31 @@ namespace Service
             }
 
             _mapper.Map(assayForUpdate, assay);
+            _repository.Save();
+        }
+
+        public (AssayForUpdateDTO assayToPatch, Assay assayEntity) GetAssayForPatch(Guid laboratoryId, Guid id, bool labTrackChanges, bool assayTrackChanges)
+        {
+            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, labTrackChanges);
+            if (lab is null)
+            {
+                throw new LaboratoryNotFoundException(laboratoryId);
+            }
+
+            var assayEntity = _repository.Assay.GetAssay(laboratoryId, id, assayTrackChanges);
+            if (assayEntity is null)
+            {
+                throw new AssayNotFoundException(id);
+            }
+
+            var assayToPatch = _mapper.Map<AssayForUpdateDTO>(assayEntity);
+
+            return (assayToPatch: assayToPatch, assayEntity: assayEntity);
+        }
+
+        public void SaveChangesForPatch(AssayForUpdateDTO assayToPatch, Assay assay)
+        {
+            _mapper.Map(assayToPatch, assay);
             _repository.Save();
         }
     }

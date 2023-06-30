@@ -1,4 +1,5 @@
-﻿using Shared.DTOs;
+﻿using Entities.Models;
+using Shared.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,10 @@ namespace Service.Interfaces
         void DeleteAssayForLaboratory(Guid laboratoryId, Guid id, bool trackChanges);
         void UpdateAssayForLaboratory(Guid laboratoryId, Guid id, AssayForUpdateDTO assayForUpdate, 
             bool labTrackChanges, bool assayTrackChanges);
+
+        (AssayForUpdateDTO assayToPatch, Assay assayEntity) GetAssayForPatch(Guid laboratoryId, Guid id, 
+            bool labTrackChanges, bool assayTrackChanges);
+
+        void SaveChangesForPatch(AssayForUpdateDTO assayToPatch, Assay assay);
     }
 }

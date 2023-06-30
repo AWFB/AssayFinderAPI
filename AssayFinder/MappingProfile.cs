@@ -19,6 +19,7 @@ namespace AssayFinder
             CreateMap<AssayForCreationDTO, Assay>();
 
             CreateMap<AssayForUpdateDTO, Assay>();
+            CreateMap<AssayForUpdateDTO, Assay>().ReverseMap();
         }
     }
 }

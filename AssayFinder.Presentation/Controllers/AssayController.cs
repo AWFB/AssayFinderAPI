@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AssayFinder.Presentation.Controllers
 {
@@ -70,8 +66,25 @@ namespace AssayFinder.Presentation.Controllers
                 return BadRequest("AssayForUpdateDTO object is null");
             }
 
-            _service.AssayService.UpdateAssayForLaboratory(laboratoryid, id, assay, 
+            _service.AssayService.UpdateAssayForLaboratory(laboratoryid, id, assay,
                 labTrackChanges: false, assayTrackChanges: true);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{id:guid}")]
+        public IActionResult PartialUpdateAssayForLaboratory(Guid laboratoryId, Guid Id, [FromBody] JsonPatchDocument<AssayForUpdateDTO> patchDoc)
+        {
+            if (patchDoc is null)
+            {
+                return BadRequest("patchDoc object sent from client is null.");
+            }
+
+            var result = _service.AssayService.GetAssayForPatch(laboratoryId, Id, labTrackChanges: false, assayTrackChanges: true);
+
+            patchDoc.ApplyTo(result.assayToPatch);
+
+            _service.AssayService.SaveChangesForPatch(result.assayToPatch, result.assayEntity);
 
             return NoContent();
         }

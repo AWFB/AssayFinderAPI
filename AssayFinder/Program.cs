@@ -2,7 +2,10 @@ using AssayFinder.Extensions;
 using Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using NLog;
+using Microsoft.AspNetCore.Mvc.Formatters;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +25,21 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 
-// As controllers are in the presentation layer
-builder.Services.AddControllers()
-    .AddApplicationPart(typeof(AssayFinder.Presentation.AssemblyReference).Assembly);
+
+builder.Services.AddControllers(config =>
+{
+    config.RespectBrowserAcceptHeader = true;
+    config.ReturnHttpNotAcceptable = true;
+})
+    // As controllers are in the presentation layer
+    .AddApplicationPart(typeof(AssayFinder.Presentation.AssemblyReference).Assembly)
+    // For JSON Patch
+    .AddNewtonsoftJson();
+
+builder.Services.Configure<MvcNewtonsoftJsonOptions>(opts => 
+{
+    opts.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+});
 
 var app = builder.Build();
 
