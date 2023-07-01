@@ -9,8 +9,8 @@ namespace Interfaces
 {
     public interface IAssayRepository
     {
-        IEnumerable<Assay> GetAssays(Guid laboratoryId, bool trackChanges);
-        Assay GetAssay(Guid laboratoryId, Guid id, bool trackChanges);
+        Task<IEnumerable<Assay>> GetAssaysAsync(Guid laboratoryId, bool trackChanges);
+        Task<Assay> GetAssayAsync(Guid laboratoryId, Guid id, bool trackChanges);
         void CreateAssayForLaboratory(Guid laboratoryId, Assay assay);
         void DeleteAssay(Assay assay);
     }

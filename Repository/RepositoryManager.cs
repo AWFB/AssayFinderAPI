@@ -22,6 +22,6 @@ namespace Repository
 
         public ILaboratoryRepository Laboratory => _laboratoryRepository.Value;
         public IAssayRepository Assay => _assayRepository.Value;
-        public void Save() => _repositoryContext.SaveChanges();
+        public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
     }
 }

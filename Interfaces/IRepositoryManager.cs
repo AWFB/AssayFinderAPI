@@ -10,6 +10,6 @@ namespace Interfaces
     {
         ILaboratoryRepository Laboratory { get; }
         IAssayRepository Assay { get; }
-        void Save();
+        Task SaveAsync();
     }
 }

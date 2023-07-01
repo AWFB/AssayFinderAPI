@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,19 +16,19 @@ namespace Repository
         }
 
 
-        public Assay GetAssay(Guid laboratoryId, Guid id, bool trackChanges)
+        public async Task<Assay> GetAssayAsync(Guid laboratoryId, Guid id, bool trackChanges)
         {
-            var assay = FindByCondition(a => a.LaboratoryId.Equals(laboratoryId) && a.AssayId == id, trackChanges)
-                .SingleOrDefault();
+            var assay = await FindByCondition(a => a.LaboratoryId.Equals(laboratoryId) && a.AssayId.Equals(id), trackChanges)
+                .SingleOrDefaultAsync();
 
             return assay;
         }
 
-        public IEnumerable<Assay> GetAssays(Guid laboratoryId, bool trackChanges)
+        public async Task<IEnumerable<Assay>> GetAssaysAsync(Guid laboratoryId, bool trackChanges)
         {
-            var assays = FindByCondition(a => a.LaboratoryId.Equals(laboratoryId), trackChanges)
+            var assays = await FindByCondition(a => a.LaboratoryId.Equals(laboratoryId), trackChanges)
                 .OrderBy(a => a.NameOfTest)
-                .ToList();
+                .ToListAsync();
 
             return assays;
         }

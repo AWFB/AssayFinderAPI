@@ -21,18 +21,18 @@ namespace Service
         }
 
         // Get all Laboratories
-        public IEnumerable<LaboratoryDTO> GetAllLaboratories(bool trackChanges)
+        public async Task<IEnumerable<LaboratoryDTO>> GetAllLaboratoriesAsync(bool trackChanges)
         {
-            var labs = _repository.Laboratory.GetAllLaboratories(trackChanges);
+            var labs = await _repository.Laboratory.GetAllLaboratoriesAsync(trackChanges);
             var labsDto = _mapper.Map<IEnumerable<LaboratoryDTO>>(labs);
 
             return labsDto;
         }
 
         // Get single laboratory by ID
-        public LaboratoryDTO GetLaboratory(Guid id, bool trackChanges)
+        public async Task<LaboratoryDTO> GetLaboratoryAsync(Guid id, bool trackChanges)
         {
-            var lab = _repository.Laboratory.GetLaboratory(id, trackChanges);
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(id, trackChanges);
 
             if (lab is null)
             {
@@ -45,21 +45,21 @@ namespace Service
         }
 
         // Create a laboratory
-        public LaboratoryDTO CreateLaboratory(LaboratoryForCreationDTO laboratory)
+        public async Task<LaboratoryDTO> CreateLaboratoryAsync(LaboratoryForCreationDTO laboratory)
         {
             var lab = _mapper.Map<Laboratory>(laboratory);
 
             _repository.Laboratory.CreateLaboratory(lab);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var labToReturn = _mapper.Map<LaboratoryDTO>(lab);
 
             return labToReturn;
         }
 
-        public void DeleteLaboratory(Guid laboratoryId, bool trackChanges)
+        public async Task DeleteLaboratoryAsync(Guid laboratoryId, bool trackChanges)
         {
-            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
 
             if (lab is null)
             {
@@ -67,19 +67,19 @@ namespace Service
             }
 
             _repository.Laboratory.DeleteLaboratory(lab);
-            _repository.Save();
+            await _repository.SaveAsync();
         }
 
-        public void UpdateLaboratory(Guid laboratoryId, LaboratoryForUpdateDTO laboratoryForUpdate, bool trackChanges)
+        public async Task UpdateLaboratoryAsync(Guid laboratoryId, LaboratoryForUpdateDTO laboratoryForUpdate, bool trackChanges)
         {
-            var labEntity = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            var labEntity = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
             if (labEntity is null)
             {
                 throw new LaboratoryNotFoundException(laboratoryId);
             }
 
             _mapper.Map(laboratoryForUpdate, labEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
         }
     }
 }

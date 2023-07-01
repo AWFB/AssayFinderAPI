@@ -4,10 +4,10 @@ namespace Service.Interfaces
 {
     public interface ILaboratoryService
     {
-        IEnumerable<LaboratoryDTO> GetAllLaboratories(bool trackChanges);
-        LaboratoryDTO GetLaboratory(Guid laboratoryId, bool trackChanges);
-        LaboratoryDTO CreateLaboratory(LaboratoryForCreationDTO laboratory);
-        void UpdateLaboratory(Guid laboratoryId, LaboratoryForUpdateDTO laboratoryForUpdate, bool trackChanges);
-        void DeleteLaboratory(Guid laboratoryId, bool trackChanges);
+        Task<IEnumerable<LaboratoryDTO>> GetAllLaboratoriesAsync(bool trackChanges);
+        Task<LaboratoryDTO> GetLaboratoryAsync(Guid laboratoryId, bool trackChanges);
+        Task<LaboratoryDTO> CreateLaboratoryAsync(LaboratoryForCreationDTO laboratory);
+        Task UpdateLaboratoryAsync(Guid laboratoryId, LaboratoryForUpdateDTO laboratoryForUpdate, bool trackChanges);
+        Task DeleteLaboratoryAsync(Guid laboratoryId, bool trackChanges);
     }
 }

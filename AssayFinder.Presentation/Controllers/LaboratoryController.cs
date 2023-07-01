@@ -18,24 +18,24 @@ namespace AssayFinder.Presentation.Controllers
 
         //api/laboratories
         [HttpGet]
-        public IActionResult GetLaboratories()
+        public async Task<IActionResult> GetLaboratories()
         {
-            var labs = _service.LaboratoryService.GetAllLaboratories(trackChanges: false);
+            var labs = await _service.LaboratoryService.GetAllLaboratoriesAsync(trackChanges: false);
 
             return Ok(labs);
         }
 
         //api/laboratories/{id}
         [HttpGet("{id:Guid}", Name = "LaboratoryById")]
-        public IActionResult GetLaboratory(Guid id)
+        public async Task<IActionResult> GetLaboratory(Guid id)
         {
-            var company = _service.LaboratoryService.GetLaboratory(id, trackChanges: false);
+            var company = await _service.LaboratoryService.GetLaboratoryAsync(id, trackChanges: false);
             return Ok(company);
         }
 
         //api/laboratories
         [HttpPost]
-        public IActionResult CreateLaboratory([FromBody] LaboratoryForCreationDTO laboratory)
+        public async Task<IActionResult> CreateLaboratory([FromBody] LaboratoryForCreationDTO laboratory)
         {
             if (laboratory is null)
             {
@@ -47,13 +47,13 @@ namespace AssayFinder.Presentation.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var createdLab = _service.LaboratoryService.CreateLaboratory(laboratory);
+            var createdLab = await _service.LaboratoryService.CreateLaboratoryAsync(laboratory);
 
             return CreatedAtRoute("LaboratoryById", new { id = createdLab.Id }, createdLab);
         }
 
         [HttpPut("{id:guid}")]
-        public IActionResult UpdateLaboratory(Guid id, [FromBody] LaboratoryForUpdateDTO laboratory)
+        public async Task<IActionResult> UpdateLaboratory(Guid id, [FromBody] LaboratoryForUpdateDTO laboratory)
         {
             if (laboratory is null)
             {
@@ -65,15 +65,15 @@ namespace AssayFinder.Presentation.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            _service.LaboratoryService.UpdateLaboratory(id, laboratory, trackChanges: true);
+            await _service.LaboratoryService.UpdateLaboratoryAsync(id, laboratory, trackChanges: true);
 
             return NoContent();
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult DeleteLaboratory(Guid id)
+        public async Task<IActionResult> DeleteLaboratory(Guid id)
         {
-            _service.LaboratoryService.DeleteLaboratory(id, trackChanges: false);
+            await _service.LaboratoryService.DeleteLaboratoryAsync(id, trackChanges: false);
 
             return NoContent();
         }

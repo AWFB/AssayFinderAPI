@@ -28,15 +28,15 @@ namespace Service
 
         
 
-        public AssayDTO GetAssay(Guid laboratoryId, Guid id, bool trackChanges)
+        public async Task<AssayDTO> GetAssayAsync(Guid laboratoryId, Guid id, bool trackChanges)
         {
-            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
             if (lab is null)
             {
                 throw new LaboratoryNotFoundException(laboratoryId);
             }
 
-            var assay = _repository.Assay.GetAssay(laboratoryId, id, trackChanges);
+            var assay = await _repository.Assay.GetAssayAsync(laboratoryId, id, trackChanges);
             if (assay is null)
             {
                 throw new AssayNotFoundException(id);
@@ -48,24 +48,24 @@ namespace Service
 
         }
 
-        public IEnumerable<AssayDTO> GetAssays(Guid laboratoryId, bool trackChanges)
+        public async Task<IEnumerable<AssayDTO>> GetAssaysAsync(Guid laboratoryId, bool trackChanges)
         {
-            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
             if (lab is null)
             {
                 throw new LaboratoryNotFoundException(laboratoryId);
             }
 
-            var assays = _repository.Assay.GetAssays(laboratoryId, trackChanges);
+            var assays = await _repository.Assay.GetAssaysAsync(laboratoryId, trackChanges);
             var assayDTO = _mapper.Map<IEnumerable<AssayDTO>>(assays);
 
             return assayDTO;
 
         }
 
-        public AssayDTO CreateAssayForLaboratory(Guid laboratoryId, AssayForCreationDTO assayForCreation, bool trackChanges)
+        public async Task<AssayDTO> CreateAssayForLaboratoryAsync(Guid laboratoryId, AssayForCreationDTO assayForCreation, bool trackChanges)
         {
-            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
             if (lab is null)
             {
                 throw new LaboratoryNotFoundException(laboratoryId);
@@ -74,59 +74,60 @@ namespace Service
             var assay = _mapper.Map<Assay>(assayForCreation);
 
             _repository.Assay.CreateAssayForLaboratory(laboratoryId, assay);
-            _repository.Save();
+            await _repository.SaveAsync();
 
             var assayToReturn = _mapper.Map<AssayDTO>(assay);
 
             return assayToReturn;
         }
 
-        public void DeleteAssayForLaboratory(Guid laboratoryId, Guid id, bool trackChanges)
+        public async Task DeleteAssayForLaboratoryAsync(Guid laboratoryId, Guid id, bool trackChanges)
         {
-            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, trackChanges);
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
             if (lab is null)
             {
                 throw new LaboratoryNotFoundException(laboratoryId);
             }
 
-            var assayForLab = _repository.Assay.GetAssay(laboratoryId, id, trackChanges);
+            var assayForLab = await _repository.Assay.GetAssayAsync(laboratoryId, id, trackChanges);
             if (assayForLab is null)
             {
                 throw new AssayNotFoundException(id);
             }
 
             _repository.Assay.DeleteAssay(assayForLab);
-            _repository.Save();
+            await _repository.SaveAsync();
         }
 
-        public void UpdateAssayForLaboratory(Guid laboratoryId, Guid id, AssayForUpdateDTO assayForUpdate, 
+        public async Task UpdateAssayForLaboratoryAsync(Guid laboratoryId, Guid id, AssayForUpdateDTO assayForUpdate, 
             bool labTrackChanges, bool assayTrackChanges)
         {
-            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, labTrackChanges);
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, labTrackChanges);
             if (lab is null)
             {
                 throw new LaboratoryNotFoundException(laboratoryId);
             }
 
-            var assay = _repository.Assay.GetAssay(laboratoryId, id, assayTrackChanges);
+            var assay = await _repository.Assay.GetAssayAsync(laboratoryId, id, assayTrackChanges);
             if (assay is null)
             {
                 throw new AssayNotFoundException(id);
             }
 
             _mapper.Map(assayForUpdate, assay);
-            _repository.Save();
+            await _repository.SaveAsync();
         }
 
-        public (AssayForUpdateDTO assayToPatch, Assay assayEntity) GetAssayForPatch(Guid laboratoryId, Guid id, bool labTrackChanges, bool assayTrackChanges)
+        public async Task<(AssayForUpdateDTO assayToPatch, Assay assayEntity)> GetAssayForPatchAsync(Guid laboratoryId, Guid id, 
+            bool labTrackChanges, bool assayTrackChanges)
         {
-            var lab = _repository.Laboratory.GetLaboratory(laboratoryId, labTrackChanges);
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, labTrackChanges);
             if (lab is null)
             {
                 throw new LaboratoryNotFoundException(laboratoryId);
             }
 
-            var assayEntity = _repository.Assay.GetAssay(laboratoryId, id, assayTrackChanges);
+            var assayEntity = await _repository.Assay.GetAssayAsync(laboratoryId, id, assayTrackChanges);
             if (assayEntity is null)
             {
                 throw new AssayNotFoundException(id);
@@ -137,10 +138,10 @@ namespace Service
             return (assayToPatch: assayToPatch, assayEntity: assayEntity);
         }
 
-        public void SaveChangesForPatch(AssayForUpdateDTO assayToPatch, Assay assay)
+        public async Task SaveChangesForPatchAsync(AssayForUpdateDTO assayToPatch, Assay assay)
         {
             _mapper.Map(assayToPatch, assay);
-            _repository.Save();
+            await _repository.SaveAsync();
         }
     }
 }

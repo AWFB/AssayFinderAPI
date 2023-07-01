@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +17,18 @@ namespace Repository
 
 
         // Get all Labs
-        public IEnumerable<Laboratory> GetAllLaboratories(bool trackchanges)
+        public async Task<IEnumerable<Laboratory>> GetAllLaboratoriesAsync(bool trackchanges)
         {
-            List<Laboratory> Labs = FindAll(trackchanges).OrderBy(l => l.LaboratoryName).ToList();
+            List<Laboratory> Labs = await FindAll(trackchanges)
+                .OrderBy(l => l.LaboratoryName)
+                .ToListAsync();
             return Labs;
         }
 
         // Get a specific laboratory
-        public Laboratory GetLaboratory(Guid laboratoryId, bool trackchanges)
+        public async Task<Laboratory> GetLaboratoryAsync(Guid laboratoryId, bool trackchanges)
         {
-            var lab = FindByCondition(l => l.Id.Equals(laboratoryId), trackchanges).SingleOrDefault();
+            var lab = await FindByCondition(l => l.Id.Equals(laboratoryId), trackchanges).SingleOrDefaultAsync();
 
             return lab;
         }
