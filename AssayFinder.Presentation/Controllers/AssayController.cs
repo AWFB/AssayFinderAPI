@@ -18,25 +18,25 @@ namespace AssayFinder.Presentation.Controllers
 
         // api/laboratories/{laboratoryId}/assays
         [HttpGet]
-        public IActionResult GetAssaysForLaboratory(Guid laboratoryId)
+        public async Task<IActionResult> GetAssaysForLaboratory(Guid laboratoryId)
         {
-            var assays = _service.AssayService.GetAssays(laboratoryId, trackChanges: false);
+            var assays = await _service.AssayService.GetAssaysAsync(laboratoryId, trackChanges: false);
 
             return Ok(assays);
         }
 
         // api/laboratories/{laboratoryId}/assays/{assayId}
         [HttpGet("{id:Guid}", Name = "GetAssayForLaboratory")]
-        public IActionResult GetAssayForLaboratory(Guid laboratoryId, Guid id)
+        public async Task<IActionResult> GetAssayForLaboratory(Guid laboratoryId, Guid id)
         {
-            var assay = _service.AssayService.GetAssay(laboratoryId, id, trackChanges: false);
+            var assay = await _service.AssayService.GetAssayAsync(laboratoryId, id, trackChanges: false);
 
             return Ok(assay);
         }
 
         // api/laboratories/{laboratoryId}/assays
         [HttpPost]
-        public IActionResult CreateAssayForLaboratory(Guid laboratoryId, [FromBody] AssayForCreationDTO assay)
+        public async Task<IActionResult> CreateAssayForLaboratory(Guid laboratoryId, [FromBody] AssayForCreationDTO assay)
         {
             if (assay is null)
             {
@@ -48,23 +48,23 @@ namespace AssayFinder.Presentation.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            var assayToReturn = _service.AssayService.CreateAssayForLaboratory(laboratoryId, assay, trackChanges: false);
+            var assayToReturn = await _service.AssayService.CreateAssayForLaboratoryAsync(laboratoryId, assay, trackChanges: false);
 
             return CreatedAtRoute("GetAssayForLaboratory", new { laboratoryId, id = assayToReturn.AssayId }, assayToReturn);
         }
 
         // api/laboratories/{laboratoryId}/assays/{id}
         [HttpDelete("{id:guid}")]
-        public IActionResult DeleteAssayForLaboratory(Guid laboratoryId, Guid id)
+        public async Task<IActionResult> DeleteAssayForLaboratory(Guid laboratoryId, Guid id)
         {
-            _service.AssayService.DeleteAssayForLaboratory(laboratoryId, id, trackChanges: false);
+            await _service.AssayService.DeleteAssayForLaboratoryAsync(laboratoryId, id, trackChanges: false);
 
             return NoContent();
         }
 
         // api/laboratories/{laboratoryId}/assays/{id}
         [HttpPut("{id:guid}")]
-        public IActionResult UpdateAssayForLaboratory(Guid laboratoryid, Guid id, [FromBody] AssayForUpdateDTO assay)
+        public async Task<IActionResult> UpdateAssayForLaboratoryAsync(Guid laboratoryid, Guid id, [FromBody] AssayForUpdateDTO assay)
         {
             if (assay is null)
             {
@@ -76,21 +76,21 @@ namespace AssayFinder.Presentation.Controllers
                 return UnprocessableEntity(ModelState);
             }
 
-            _service.AssayService.UpdateAssayForLaboratory(laboratoryid, id, assay,
+            await _service.AssayService.UpdateAssayForLaboratoryAsync(laboratoryid, id, assay,
                 labTrackChanges: false, assayTrackChanges: true);
 
             return NoContent();
         }
 
         [HttpPatch("{id:guid}")]
-        public IActionResult PartialUpdateAssayForLaboratory(Guid laboratoryId, Guid Id, [FromBody] JsonPatchDocument<AssayForUpdateDTO> patchDoc)
+        public async Task<IActionResult> PartialUpdateAssayForLaboratory(Guid laboratoryId, Guid Id, [FromBody] JsonPatchDocument<AssayForUpdateDTO> patchDoc)
         {
             if (patchDoc is null)
             {
                 return BadRequest("patchDoc object sent from client is null.");
             }
 
-            var result = _service.AssayService.GetAssayForPatch(laboratoryId, Id, labTrackChanges: false, assayTrackChanges: true);
+            var result = await _service.AssayService.GetAssayForPatchAsync(laboratoryId, Id, labTrackChanges: false, assayTrackChanges: true);
 
             patchDoc.ApplyTo(result.assayToPatch, ModelState);
 
@@ -99,7 +99,7 @@ namespace AssayFinder.Presentation.Controllers
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            _service.AssayService.SaveChangesForPatch(result.assayToPatch, result.assayEntity);
+            await _service.AssayService.SaveChangesForPatchAsync(result.assayToPatch, result.assayEntity);
 
             return NoContent();
         }
