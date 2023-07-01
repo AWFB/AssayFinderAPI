@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AssayFinder.Presentation.ActionFilters;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DTOs;
@@ -35,36 +36,18 @@ namespace AssayFinder.Presentation.Controllers
 
         //api/laboratories
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateLaboratory([FromBody] LaboratoryForCreationDTO laboratory)
         {
-            if (laboratory is null)
-            {
-                return BadRequest("LaboratoryForCreationDTO object is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
-            }
-
             var createdLab = await _service.LaboratoryService.CreateLaboratoryAsync(laboratory);
 
             return CreatedAtRoute("LaboratoryById", new { id = createdLab.Id }, createdLab);
         }
 
         [HttpPut("{id:guid}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateLaboratory(Guid id, [FromBody] LaboratoryForUpdateDTO laboratory)
         {
-            if (laboratory is null)
-            {
-                return BadRequest("LaboratoryForUpdateDTO object is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return UnprocessableEntity(ModelState);
-            }
-
             await _service.LaboratoryService.UpdateLaboratoryAsync(id, laboratory, trackChanges: true);
 
             return NoContent();
