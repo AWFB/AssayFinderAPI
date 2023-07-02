@@ -30,17 +30,9 @@ namespace Service
 
         public async Task<AssayDTO> GetAssayAsync(Guid laboratoryId, Guid id, bool trackChanges)
         {
-            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
-            if (lab is null)
-            {
-                throw new LaboratoryNotFoundException(laboratoryId);
-            }
+            await CheckLabExists(laboratoryId, trackChanges);
 
-            var assay = await _repository.Assay.GetAssayAsync(laboratoryId, id, trackChanges);
-            if (assay is null)
-            {
-                throw new AssayNotFoundException(id);
-            }
+            var assay = await GetAssayForLabAndCheckExists(laboratoryId, id, trackChanges);
 
             var assayDTO = _mapper.Map<AssayDTO>(assay);
 
@@ -50,11 +42,7 @@ namespace Service
 
         public async Task<IEnumerable<AssayDTO>> GetAssaysAsync(Guid laboratoryId, bool trackChanges)
         {
-            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
-            if (lab is null)
-            {
-                throw new LaboratoryNotFoundException(laboratoryId);
-            }
+            await CheckLabExists(laboratoryId, trackChanges);
 
             var assays = await _repository.Assay.GetAssaysAsync(laboratoryId, trackChanges);
             var assayDTO = _mapper.Map<IEnumerable<AssayDTO>>(assays);
@@ -65,15 +53,12 @@ namespace Service
 
         public async Task<AssayDTO> CreateAssayForLaboratoryAsync(Guid laboratoryId, AssayForCreationDTO assayForCreation, bool trackChanges)
         {
-            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
-            if (lab is null)
-            {
-                throw new LaboratoryNotFoundException(laboratoryId);
-            }
+            await CheckLabExists(laboratoryId, trackChanges);
 
             var assay = _mapper.Map<Assay>(assayForCreation);
 
             _repository.Assay.CreateAssayForLaboratory(laboratoryId, assay);
+            
             await _repository.SaveAsync();
 
             var assayToReturn = _mapper.Map<AssayDTO>(assay);
@@ -83,36 +68,20 @@ namespace Service
 
         public async Task DeleteAssayForLaboratoryAsync(Guid laboratoryId, Guid id, bool trackChanges)
         {
-            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
-            if (lab is null)
-            {
-                throw new LaboratoryNotFoundException(laboratoryId);
-            }
+            await CheckLabExists(laboratoryId, trackChanges);
 
-            var assayForLab = await _repository.Assay.GetAssayAsync(laboratoryId, id, trackChanges);
-            if (assayForLab is null)
-            {
-                throw new AssayNotFoundException(id);
-            }
+            var assayForDelete = await GetAssayForLabAndCheckExists(laboratoryId, id, trackChanges);
 
-            _repository.Assay.DeleteAssay(assayForLab);
+            _repository.Assay.DeleteAssay(assayForDelete);
             await _repository.SaveAsync();
         }
 
         public async Task UpdateAssayForLaboratoryAsync(Guid laboratoryId, Guid id, AssayForUpdateDTO assayForUpdate, 
             bool labTrackChanges, bool assayTrackChanges)
         {
-            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, labTrackChanges);
-            if (lab is null)
-            {
-                throw new LaboratoryNotFoundException(laboratoryId);
-            }
+            await CheckLabExists(laboratoryId, labTrackChanges);
 
-            var assay = await _repository.Assay.GetAssayAsync(laboratoryId, id, assayTrackChanges);
-            if (assay is null)
-            {
-                throw new AssayNotFoundException(id);
-            }
+            var assay = await GetAssayForLabAndCheckExists(laboratoryId, id, assayTrackChanges);
 
             _mapper.Map(assayForUpdate, assay);
             await _repository.SaveAsync();
@@ -121,27 +90,39 @@ namespace Service
         public async Task<(AssayForUpdateDTO assayToPatch, Assay assayEntity)> GetAssayForPatchAsync(Guid laboratoryId, Guid id, 
             bool labTrackChanges, bool assayTrackChanges)
         {
-            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, labTrackChanges);
-            if (lab is null)
-            {
-                throw new LaboratoryNotFoundException(laboratoryId);
-            }
+            await CheckLabExists(laboratoryId, labTrackChanges);
 
-            var assayEntity = await _repository.Assay.GetAssayAsync(laboratoryId, id, assayTrackChanges);
-            if (assayEntity is null)
-            {
-                throw new AssayNotFoundException(id);
-            }
+            var assay = await GetAssayForLabAndCheckExists(laboratoryId, id, assayTrackChanges);
 
-            var assayToPatch = _mapper.Map<AssayForUpdateDTO>(assayEntity);
+            var assayToPatch = _mapper.Map<AssayForUpdateDTO>(assay);
 
-            return (assayToPatch: assayToPatch, assayEntity: assayEntity);
+            return (assayToPatch: assayToPatch, assayEntity: assay);
         }
 
         public async Task SaveChangesForPatchAsync(AssayForUpdateDTO assayToPatch, Assay assay)
         {
             _mapper.Map(assayToPatch, assay);
             await _repository.SaveAsync();
+        }
+
+        private async Task CheckLabExists(Guid laboratoryId, bool trackChanges)
+        {
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
+            if (lab is null)
+            {
+                throw new LaboratoryNotFoundException(laboratoryId);
+            }
+        }
+
+        private async Task<Assay> GetAssayForLabAndCheckExists(Guid laboratoryId, Guid id, bool trackChanges)
+        {
+            var assay = await _repository.Assay.GetAssayAsync(laboratoryId, id, trackChanges);
+            if (assay is null)
+            {
+                throw new AssayNotFoundException(id);
+            }
+
+            return assay;
         }
     }
 }

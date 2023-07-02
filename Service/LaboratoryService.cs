@@ -32,12 +32,7 @@ namespace Service
         // Get single laboratory by ID
         public async Task<LaboratoryDTO> GetLaboratoryAsync(Guid id, bool trackChanges)
         {
-            var lab = await _repository.Laboratory.GetLaboratoryAsync(id, trackChanges);
-
-            if (lab is null)
-            {
-                throw new LaboratoryNotFoundException(id);
-            }
+            var lab = await GetLabAndCheckItExists(id, trackChanges);
 
             var laboratoryDto = _mapper.Map<LaboratoryDTO>(lab);
             
@@ -59,12 +54,7 @@ namespace Service
 
         public async Task DeleteLaboratoryAsync(Guid laboratoryId, bool trackChanges)
         {
-            var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
-
-            if (lab is null)
-            {
-                throw new LaboratoryNotFoundException(laboratoryId);
-            }
+            var lab = await GetLabAndCheckItExists(laboratoryId, trackChanges);
 
             _repository.Laboratory.DeleteLaboratory(lab);
             await _repository.SaveAsync();
@@ -72,14 +62,23 @@ namespace Service
 
         public async Task UpdateLaboratoryAsync(Guid laboratoryId, LaboratoryForUpdateDTO laboratoryForUpdate, bool trackChanges)
         {
-            var labEntity = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
-            if (labEntity is null)
-            {
-                throw new LaboratoryNotFoundException(laboratoryId);
-            }
+            var lab = await GetLabAndCheckItExists(laboratoryId, trackChanges);
 
-            _mapper.Map(laboratoryForUpdate, labEntity);
+            _mapper.Map(laboratoryForUpdate, lab);
             await _repository.SaveAsync();
+        }
+
+
+
+        private async Task<Laboratory> GetLabAndCheckItExists(Guid id, bool trackChanges)
+        {
+            var lab = await _repository.Laboratory.GetLaboratoryAsync(id, trackChanges);
+            if (lab is null)
+            {
+                throw new LaboratoryNotFoundException(id);
+            }
+            return lab;
+
         }
     }
 }
