@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DTOs;
+using Shared.RequestFeatures;
 
 namespace AssayFinder.Presentation.Controllers
 {
@@ -19,9 +20,9 @@ namespace AssayFinder.Presentation.Controllers
 
         // api/laboratories/{laboratoryId}/assays
         [HttpGet]
-        public async Task<IActionResult> GetAssaysForLaboratory(Guid laboratoryId)
+        public async Task<IActionResult> GetAssaysForLaboratory(Guid laboratoryId, [FromQuery] AssayParameters assayParameters)
         {
-            var assays = await _service.AssayService.GetAssaysAsync(laboratoryId, trackChanges: false);
+            var assays = await _service.AssayService.GetAssaysAsync(laboratoryId, assayParameters, trackChanges: false);
 
             return Ok(assays);
         }
@@ -65,6 +66,7 @@ namespace AssayFinder.Presentation.Controllers
             return NoContent();
         }
 
+        // api/laboratories/{laboratoryId}/assays/{id}
         [HttpPatch("{id:guid}")]
         public async Task<IActionResult> PartialUpdateAssayForLaboratory(Guid laboratoryId, Guid Id, [FromBody] JsonPatchDocument<AssayForUpdateDTO> patchDoc)
         {

@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Shared.DTOs;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Service.Interfaces
 {
     public interface IAssayService
     {
-        Task<IEnumerable<AssayDTO>> GetAssaysAsync(Guid laboratoryId, bool trackChanges);
+        Task<IEnumerable<AssayDTO>> GetAssaysAsync(Guid laboratoryId, AssayParameters assayParameters, bool trackChanges);
         Task<AssayDTO> GetAssayAsync(Guid laboratoryId, Guid id, bool trackChanges);
         Task<AssayDTO> CreateAssayForLaboratoryAsync(Guid laboratoryId, AssayForCreationDTO assayForCreation, bool trackChanges);
         Task DeleteAssayForLaboratoryAsync(Guid laboratoryId, Guid id, bool trackChanges);

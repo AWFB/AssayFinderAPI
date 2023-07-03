@@ -4,6 +4,7 @@ using Entities.Models;
 using Interfaces;
 using Service.Interfaces;
 using Shared.DTOs;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,11 +41,11 @@ namespace Service
 
         }
 
-        public async Task<IEnumerable<AssayDTO>> GetAssaysAsync(Guid laboratoryId, bool trackChanges)
+        public async Task<IEnumerable<AssayDTO>> GetAssaysAsync(Guid laboratoryId, AssayParameters assayParameters, bool trackChanges)
         {
             await CheckLabExists(laboratoryId, trackChanges);
 
-            var assays = await _repository.Assay.GetAssaysAsync(laboratoryId, trackChanges);
+            var assays = await _repository.Assay.GetAssaysAsync(laboratoryId, assayParameters, trackChanges);
             var assayDTO = _mapper.Map<IEnumerable<AssayDTO>>(assays);
 
             return assayDTO;
@@ -105,6 +106,8 @@ namespace Service
             await _repository.SaveAsync();
         }
 
+
+        // Helper methods
         private async Task CheckLabExists(Guid laboratoryId, bool trackChanges)
         {
             var lab = await _repository.Laboratory.GetLaboratoryAsync(laboratoryId, trackChanges);
