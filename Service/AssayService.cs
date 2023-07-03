@@ -41,14 +41,16 @@ namespace Service
 
         }
 
-        public async Task<IEnumerable<AssayDTO>> GetAssaysAsync(Guid laboratoryId, AssayParameters assayParameters, bool trackChanges)
+        public async Task<(IEnumerable<AssayDTO> assays, MetaData metaData)> GetAssaysAsync(Guid laboratoryId, 
+            AssayParameters assayParameters, bool trackChanges)
         {
             await CheckLabExists(laboratoryId, trackChanges);
 
-            var assays = await _repository.Assay.GetAssaysAsync(laboratoryId, assayParameters, trackChanges);
-            var assayDTO = _mapper.Map<IEnumerable<AssayDTO>>(assays);
+            var assaysWithMetaData = await _repository.Assay.GetAssaysAsync(laboratoryId, assayParameters, trackChanges);
 
-            return assayDTO;
+            var assayDTO = _mapper.Map<IEnumerable<AssayDTO>>(assaysWithMetaData);
+
+            return (assays: assayDTO, metaData: assaysWithMetaData.MetaData);
 
         }
 

@@ -25,15 +25,13 @@ namespace Repository
             return assay;
         }
 
-        public async Task<IEnumerable<Assay>> GetAssaysAsync(Guid laboratoryId, AssayParameters assayParameters, bool trackChanges)
+        public async Task<PagedList<Assay>> GetAssaysAsync(Guid laboratoryId, AssayParameters assayParameters, bool trackChanges)
         {
             var assays = await FindByCondition(a => a.LaboratoryId.Equals(laboratoryId), trackChanges)
                 .OrderBy(a => a.NameOfTest)
-                .Skip((assayParameters.PageNumber - 1) * assayParameters.PageSize)
-                .Take(assayParameters.PageSize)
                 .ToListAsync();
 
-            return assays;
+            return PagedList<Assay>.ToPagedList(assays, assayParameters.PageNumber, assayParameters.PageSize);
         }
 
         public void CreateAssayForLaboratory(Guid laboratoryId, Assay assay)

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
 using Shared.DTOs;
 using Shared.RequestFeatures;
+using System.Text.Json;
 
 namespace AssayFinder.Presentation.Controllers
 {
@@ -22,9 +23,12 @@ namespace AssayFinder.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAssaysForLaboratory(Guid laboratoryId, [FromQuery] AssayParameters assayParameters)
         {
-            var assays = await _service.AssayService.GetAssaysAsync(laboratoryId, assayParameters, trackChanges: false);
+            var pagedResults = await _service.AssayService.GetAssaysAsync(laboratoryId, assayParameters, trackChanges: false);
 
-            return Ok(assays);
+            // Add headers for pagination on front end
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResults.metaData));
+
+            return Ok(pagedResults.assays);
         }
 
         // api/laboratories/{laboratoryId}/assays/{assayId}

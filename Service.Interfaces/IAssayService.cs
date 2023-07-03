@@ -11,7 +11,9 @@ namespace Service.Interfaces
 {
     public interface IAssayService
     {
-        Task<IEnumerable<AssayDTO>> GetAssaysAsync(Guid laboratoryId, AssayParameters assayParameters, bool trackChanges);
+        Task<(IEnumerable<AssayDTO> assays, MetaData metaData)> GetAssaysAsync(Guid laboratoryId, 
+            AssayParameters assayParameters, bool trackChanges);
+
         Task<AssayDTO> GetAssayAsync(Guid laboratoryId, Guid id, bool trackChanges);
         Task<AssayDTO> CreateAssayForLaboratoryAsync(Guid laboratoryId, AssayForCreationDTO assayForCreation, bool trackChanges);
         Task DeleteAssayForLaboratoryAsync(Guid laboratoryId, Guid id, bool trackChanges);
