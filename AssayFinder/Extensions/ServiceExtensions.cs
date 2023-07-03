@@ -13,7 +13,9 @@ namespace AssayFinder.Extensions
             opts.AddPolicy("CorsPolicy", builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader())
+                .AllowAnyHeader()
+                .WithExposedHeaders("X-Pagination"))
+        
         );
 
         public static void ConfigureLoggerService(this IServiceCollection services) =>
