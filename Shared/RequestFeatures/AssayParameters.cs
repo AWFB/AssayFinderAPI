@@ -8,5 +8,7 @@ namespace Shared.RequestFeatures
 {
     public class AssayParameters : RequestParameters
     {
+        
+        public string? SearchTerm { get; set; }
     }
 }

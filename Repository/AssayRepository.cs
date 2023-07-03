@@ -1,6 +1,7 @@
 ﻿using Entities.Models;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extensions;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace Repository
         {
             var assays = await FindByCondition(a => a.LaboratoryId.Equals(laboratoryId), trackChanges)
                 .OrderBy(a => a.NameOfTest)
+                .Search(assayParameters.SearchTerm)
                 .ToListAsync();
 
             return PagedList<Assay>.ToPagedList(assays, assayParameters.PageNumber, assayParameters.PageSize);
