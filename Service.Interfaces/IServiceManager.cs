@@ -10,5 +10,6 @@ namespace Service.Interfaces
     {
         ILaboratoryService LaboratoryService { get; }
         IAssayService AssayService { get; }
+        IAuthenticationService AuthenticationService { get; }
     }
 }

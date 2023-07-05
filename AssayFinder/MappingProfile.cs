@@ -13,17 +13,14 @@ namespace AssayFinder
                 opts => opts.MapFrom(x => string.Join(", ", x.Address, x.City, x.Country, x.Postcode)));
 
             CreateMap<LaboratoryForCreationDTO, Laboratory>();
-
             CreateMap<LaboratoryForUpdateDTO, Laboratory>();
 
             CreateMap<Assay, AssayDTO>();
-
-            
-
             CreateMap<AssayForCreationDTO, Assay>();
-
             CreateMap<AssayForUpdateDTO, Assay>();
             CreateMap<AssayForUpdateDTO, Assay>().ReverseMap();
+
+            CreateMap<RegisterUserDTO, User>();
         }
     }
 }
