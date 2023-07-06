@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "CompanyEmployees": {
+    "AssayFinder": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,

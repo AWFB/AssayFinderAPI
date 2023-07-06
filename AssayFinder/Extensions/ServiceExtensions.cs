@@ -1,11 +1,14 @@
 ﻿using Entities.Models;
 using Interfaces;
 using LoggerService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Repository;
 using Service;
 using Service.Interfaces;
+using System.Text;
 
 namespace AssayFinder.Extensions
 {
@@ -46,6 +49,31 @@ namespace AssayFinder.Extensions
             })
                 .AddEntityFrameworkStores<RepositoryContext>()
                 .AddDefaultTokenProviders();
+        }
+
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection("JwtSettings");
+
+            services.AddAuthentication(opts =>
+            {
+                opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ValidIssuer = jwtSettings["validIssuer"],
+                        ValidAudience = jwtSettings["validAudience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
+                    };
+                });
         }
     }
 }

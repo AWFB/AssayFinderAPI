@@ -1,4 +1,5 @@
 ﻿using AssayFinder.Presentation.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interfaces;
@@ -19,6 +20,7 @@ namespace AssayFinder.Presentation.Controllers
 
         //api/laboratories
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetLaboratories()
         {
             var labs = await _service.LaboratoryService.GetAllLaboratoriesAsync(trackChanges: false);
