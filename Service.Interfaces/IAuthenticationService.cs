@@ -12,6 +12,7 @@ namespace Service.Interfaces
     {
         Task<IdentityResult> RegisterUser(RegisterUserDTO userForRegistration);
         Task<bool> ValidateUser(UserForAuthDTO userForAuth);
-        Task<string> CreateToken();
+        Task<TokenDTO> CreateToken(bool populateExp);
+        Task<TokenDTO> RefreshToken(TokenDTO tokenDTO);
     }
 }
